@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form id="registrationForm" style="width: 80%;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit" class="register">Register</button>
+        </form>
+        <a href="/users" target="_blank" style="padding: 10px; border: 1px solid #007BFF; border-radius: 25px; text-decoration: none; text-align: center; background: #007BFF; color: #fff;">View Users</a>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            document.getElementById('message').textContent = result.message;
+            if (response.ok) {
+                setTimeout(() => {
+                    window.location.href = '/users';
+                }, 1500);
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("JavaScript loaded");
+            const registerButtons = document.querySelectorAll('.register');
+            registerButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if (!confirm("Are you sure to Register!")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>
